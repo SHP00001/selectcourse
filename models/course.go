@@ -31,6 +31,23 @@ type Course struct {
 	Userid      int64     `json:"userid"`
 }
 
+func GetCourseByUserID(uid int64)([]Course,error){
+	var re []Course
+	uclist,err:=GetUserCourseByUserId(uid)
+	if err!=nil{
+		return nil,err
+	}
+	for _,v:= range uclist{
+		c,err:=GetCourseByID(v.Courseid)
+		if err!=nil{
+			return nil,err
+		}
+		re=append(re,c)
+	}
+	return re,nil
+
+}
+
 func AddCourse(c Course) (int64, error) {
 	o := orm.NewOrm()
 	return o.Insert(&c)

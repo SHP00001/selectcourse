@@ -1,7 +1,7 @@
 package models
 
 import (
-	//      "fmt"
+	//"fmt"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql" // import your used driver
 	//"strconv"
@@ -114,6 +114,11 @@ func UpdateCourseStatus(uc Usercourse) error {
 		}
 	} else if couse.Type != "vip" && uc.Status == "approval" {
 		return errors.New("非vip课程不存在审批过程")
+	}
+	exist:=o.QueryTable("usercourse").Filter("userid", uc.Userid).Filter("courseid", uc.Courseid).Exist()
+	//fmt.Println(exist)
+	if exist {
+		return errors.New("禁止重复提交")
 	}
 	err = UpdateCourseSelected(uc.Courseid, 1)
 	if err != nil {

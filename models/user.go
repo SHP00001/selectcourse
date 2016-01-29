@@ -70,6 +70,6 @@ func UpdatePassword(uid int64, op string, np string) error {
 		return errors.New("密码错误")
 	}
 	_, err = o.QueryTable("user").Filter("id", uid).Update(orm.Params{
-		"password": np,"updated":time.Now()})
+		"password": np, "updated": time.Now()})
 	return nil
 }

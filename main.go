@@ -16,7 +16,7 @@ func init() {
 	orm.RegisterDataBase("default", "mysql", "root:root@/selectcourse?charset=utf8", 30)
 
 	// register model
-	orm.RegisterModel(new(models.User),new(models.Course),new(models.Usercourse))
+	orm.RegisterModel(new(models.User),new(models.Course),new(models.Usercourse),new(models.Discuss))
 
 	// create table
 	orm.RunSyncdb("default", false, true)

@@ -60,7 +60,7 @@ func (this *CourseController) GetByUserID() {
 	}
 	remap := Map{"result": "ok"}
 	remap["course"] = cl
-	remap["coursehour"]= user.Coursehour
+	remap["coursehour"] = user.Coursehour
 	re, err := json.Marshal(remap)
 	if err != nil {
 		beego.Error("err:", err.Error())
@@ -92,6 +92,13 @@ func (this *CourseController) NewCourse() {
 	}
 	//c:= models.Course{}
 	cid, err := models.AddCourse(course)
+	if err != nil {
+		beego.Error("err:", err.Error())
+		ErrMap["msg"] = err.Error()
+		re, _ := json.Marshal(ErrMap)
+		this.Ctx.Output.Body(re)
+		return
+	}
 	remap := Map{"result": "ok"}
 	remap["courseid"] = cid
 	remap["coursename"] = course.Coursename

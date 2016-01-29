@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"encoding/json"
 	"github.com/astaxie/beego"
+	"selectcourse/models"
 )
 
 type DiscussController struct {
@@ -18,6 +20,23 @@ func (this *DiscussController) Get() {
 
 func (this *DiscussController) Post() {
 	beego.Informational("post json: ", string(this.Ctx.Input.RequestBody), "ip", this.Ctx.Input.IP())
+	var discuss models.Discuss
+	err := json.Unmarshal(this.Ctx.Input.RequestBody, &discuss)
+	if err != nil {
+		beego.Error("err:", err.Error())
+		ErrMap["msg"] = err.Error()
+		re, _ := json.Marshal(ErrMap)
+		this.Ctx.Output.Body(re)
+		return
+	}
+	_, err = models.AddDiscuss(discuss)
+	if err != nil {
+		beego.Error("err:", err.Error())
+		ErrMap["msg"] = err.Error()
+		re, _ := json.Marshal(ErrMap)
+		this.Ctx.Output.Body(re)
+		return
+	}
 	this.Ctx.Output.Body([]byte(`{"result":"ok"}`))
 }
 

@@ -10,13 +10,13 @@ import (
 )
 
 type Usercourse struct {
-	Id       int64  `json:"-"`
-	Userid   int64  `orm:"index" json:"userid"`
-	Courseid int64  `orm:"index" json:"courseid"`
-	Status   string `orm:"size(100);index" json:"status"`
-	Adminid  int64  `orm:"-" json:"adminid"`
-	Created    time.Time `orm:"auto_now_add;type(datetime)" json:"-"`
-	Updated    time.Time `orm:"auto_now;type(datetime)" json:"-"`
+	Id       int64     `json:"-"`
+	Userid   int64     `orm:"index" json:"userid"`
+	Courseid int64     `orm:"index" json:"courseid"`
+	Status   string    `orm:"size(100);index" json:"status"`
+	Adminid  int64     `orm:"-" json:"adminid"`
+	Created  time.Time `orm:"auto_now_add;type(datetime)" json:"-"`
+	Updated  time.Time `orm:"auto_now;type(datetime)" json:"-"`
 }
 
 func UpdateCourseSelected(cid int64, count int) error {
@@ -87,7 +87,7 @@ func UpdateCourseStatus(uc Usercourse) error {
 				return err
 			}
 			_, err = o.QueryTable("usercourse").Filter("userid", uc.Userid).Filter("courseid", uc.Courseid).Update(orm.Params{
-				"status": uc.Status,"updated":time.Now()})
+				"status": uc.Status, "updated": time.Now()})
 			if err != nil {
 				return err
 			}
@@ -103,7 +103,7 @@ func UpdateCourseStatus(uc Usercourse) error {
 			}
 		}
 		_, err = o.QueryTable("usercourse").Filter("userid", uc.Userid).Filter("courseid", uc.Courseid).Update(orm.Params{
-			"status": uc.Status,"updated":time.Now()})
+			"status": uc.Status, "updated": time.Now()})
 		if err != nil {
 			return err
 		}

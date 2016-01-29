@@ -39,9 +39,37 @@ func (this *CourseController) GetByTime() {
 }
 
 func (this *CourseController) GetByUserID() {
-	userid := this.Input().Get("userid")
+	var userid int64
+	this.Ctx.Input.Bind(&userid, "userid")
 	beego.Informational("userid:", userid)
-	this.Ctx.Output.Body([]byte(`{"result":"ok","coursehour":12,"courses":[{"courseid":123,"coursename":"**","teachername":"**","year":2016,"month":1,"day":20,"start":111111,"end":11111,"details":"**","coursetype":"vip"},{"courseid":123,"coursename":"**","teachername":"**","year":2016,"month":1,"day":20,"start":111111,"end":11111,"details":"**","coursetype":"vip"}]}`))
+	user, err := models.GetUserByID(userid)
+	if err != nil {
+		beego.Error("err:", err.Error())
+		ErrMap["msg"] = err.Error()
+		re, _ := json.Marshal(ErrMap)
+		this.Ctx.Output.Body(re)
+		return
+	}
+	cl, err := models.GetCourseByUserID(userid)
+	if err != nil {
+		beego.Error("err:", err.Error())
+		ErrMap["msg"] = err.Error()
+		re, _ := json.Marshal(ErrMap)
+		this.Ctx.Output.Body(re)
+		return
+	}
+	remap := Map{"result": "ok"}
+	remap["course"] = cl
+	remap["coursehour"]= user.Coursehour
+	re, err := json.Marshal(remap)
+	if err != nil {
+		beego.Error("err:", err.Error())
+		ErrMap["msg"] = err.Error()
+		re, _ := json.Marshal(ErrMap)
+		this.Ctx.Output.Body(re)
+		return
+	}
+	this.Ctx.Output.Body(re)
 }
 
 func (this *CourseController) NewCourse() {

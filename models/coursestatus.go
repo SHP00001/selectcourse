@@ -34,7 +34,7 @@ func GetUserCourse(uid int64, cid int64) (Usercourse, error) {
 func GetUserCourseByUserId(uid int64) ([]Usercourse, error) {
 	o := orm.NewOrm()
 	var uc []Usercourse
-	_,err := o.QueryTable("usercourse").Filter("userid", uid).All(&uc)
+	_, err := o.QueryTable("usercourse").Filter("userid", uid).All(&uc)
 	return uc, err
 }
 
@@ -115,7 +115,7 @@ func UpdateCourseStatus(uc Usercourse) error {
 	} else if couse.Type != "vip" && uc.Status == "approval" {
 		return errors.New("非vip课程不存在审批过程")
 	}
-	exist:=o.QueryTable("usercourse").Filter("userid", uc.Userid).Filter("courseid", uc.Courseid).Exist()
+	exist := o.QueryTable("usercourse").Filter("userid", uc.Userid).Filter("courseid", uc.Courseid).Exist()
 	//fmt.Println(exist)
 	if exist {
 		return errors.New("禁止重复提交")

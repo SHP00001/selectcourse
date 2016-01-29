@@ -6,6 +6,7 @@ import (
 	_ "github.com/go-sql-driver/mysql" // import your used driver
 	//"strconv"
 	//	"errors"
+	"strings"
 	"time"
 )
 
@@ -31,20 +32,23 @@ type Course struct {
 	Userid      int64     `json:"userid"`
 }
 
-func GetCourseByUserID(uid int64)([]Course,error){
+func GetCourseByUserID(uid int64) ([]Course, error) {
 	var re []Course
-	uclist,err:=GetUserCourseByUserId(uid)
-	if err!=nil{
-		return nil,err
+	uclist, err := GetUserCourseByUserId(uid)
+	if err != nil {
+		return nil, err
 	}
-	for _,v:= range uclist{
-		c,err:=GetCourseByID(v.Courseid)
-		if err!=nil{
-			return nil,err
+	for _, v := range uclist {
+		c, err := GetCourseByID(v.Courseid)
+		if err != nil {
+			if strings.Contains(err.Error(), "no row found") {
+				continue
+			}
+			return nil, err
 		}
-		re=append(re,c)
+		re = append(re, c)
 	}
-	return re,nil
+	return re, nil
 
 }
 
